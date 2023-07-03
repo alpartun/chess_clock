@@ -42,7 +42,7 @@ class _HoverIconButtonState extends State<HoverIconButton> {
           ..scale(isPressed ? widget.scaleFactor : 1.0),
         child: Icon(
           widget.icon,
-          size: 48.0,
+          size: 32.0,
         ),
       ),
     );

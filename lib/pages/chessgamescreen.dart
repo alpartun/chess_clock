@@ -216,7 +216,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                       Text(
                         formatTime(remainingTimePlayer1),
                         style: const TextStyle(
-                            fontSize: 128, fontStyle: FontStyle.normal),
+                            fontSize: 112, fontStyle: FontStyle.normal),
                       ),
                     ],
                   ),
@@ -244,7 +244,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                         ),
                         Text(
                           "${widget.deneme.scorePlayer1}",
-                          style: const TextStyle(fontSize: 48),
+                          style: const TextStyle(fontSize: 32),
                         ),
                         HoverIconButton(
                           icon: (Icons.remove_circle_outline_rounded),
@@ -472,7 +472,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                       ),
                       Text(
                         "${widget.deneme.scorePlayer2}",
-                        style: const TextStyle(fontSize: 48),
+                        style: const TextStyle(fontSize: 32),
                       ),
                       HoverIconButton(
                         icon: (Icons.remove_circle_outline_rounded),
@@ -520,7 +520,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                     Text(
                       formatTime(remainingTimePlayer2),
                       style: const TextStyle(
-                          fontSize: 128,
+                          fontSize: 112,
                           fontStyle: FontStyle.normal,
                           color: Colors.white),
                     ),
