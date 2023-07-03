@@ -21,10 +21,8 @@ class _ChessGameScreen extends State<ChessGameScreen> {
   int remainingTimePlayer1 = 0;
   int remainingTimePlayer2 = 0;
   Timer? countdownTimer;
-  bool turn = true;
   int currentPlayer = 0;
   bool isRestart = false;
-  int? selectedIncrementTemp;
   int selectedIncrement = 0;
   int selectedTime = 10;
   List<int> incrementOptions = [0, 1, 3, 5, 10, 15];
@@ -48,8 +46,8 @@ class _ChessGameScreen extends State<ChessGameScreen> {
     selectedIncrement = 0;
 
     setState(() {
-      remainingTimePlayer1 = 10;
-      remainingTimePlayer2 = 10;
+      remainingTimePlayer1 = 10 * 60;
+      remainingTimePlayer2 = 10 * 60;
       currentPlayer = 0;
       isRestart = true;
       move = 0;
@@ -140,10 +138,10 @@ class _ChessGameScreen extends State<ChessGameScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Winner'),
-          content: Text('Congrats !, $winner won the game!'),
+          content: Text('Congratulations, $winner won the game !'),
           actions: [
             TextButton(
-              child: const Text('Okey'),
+              child: const Text('Ok'),
               onPressed: () {
                 // Skorunuzu artırabilirsiniz.
                 // Örneğin, kazananın skorunu 1 artırmak için:
