@@ -60,6 +60,7 @@ flutter:
   assets:
     - assets/images/chess_board.jpg
     - assets/sounds/dong.wav
+    - assets/sounds/count.wav
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

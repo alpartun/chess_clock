@@ -14,6 +14,7 @@ class ChessGameScreen extends StatefulWidget {
 }
 
 class _ChessGameScreen extends State<ChessGameScreen> {
+  bool isFinished = false;
   bool isDropMinOptionSelected = false;
   bool isDropIncOptionSelected = false;
   int move = 0;
@@ -52,6 +53,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
       currentPlayer = 0;
       isRestart = true;
       move = 0;
+      isFinished = false;
     });
   }
 
@@ -100,6 +102,9 @@ class _ChessGameScreen extends State<ChessGameScreen> {
   void startCountdownTimer(int time, int player) {
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
+        if (time <= 10 && time >= 0) {
+          playCountSound();
+        }
         if (time > 0) {
           if (isRestart) {
             timer.cancel();
@@ -115,9 +120,11 @@ class _ChessGameScreen extends State<ChessGameScreen> {
           timer.cancel();
           // Süre bittiğinde yapılacak işlemleri buraya yazın// Zil sesini çal
           if (remainingTimePlayer1 == 0) {
+            isFinished = true;
             // Player 2 kazandı
             showWinnerDialog(widget.deneme.player2, widget.deneme.scorePlayer2);
           } else if (remainingTimePlayer2 == 0) {
+            isFinished = true;
             // Player 1 kazandı
             showWinnerDialog(widget.deneme.player1, widget.deneme.scorePlayer1);
           }
@@ -183,6 +190,9 @@ class _ChessGameScreen extends State<ChessGameScreen> {
               quarterTurns: 2,
               child: GestureDetector(
                 onTap: () {
+                  if (isFinished) {
+                    return;
+                  }
                   if (currentPlayer == 2) {
                     return;
                   }
@@ -198,7 +208,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                   move++;
                 },
                 child: Container(
-                  color: Colors.white,
+                  color: remainingTimePlayer1 == 0 ? Colors.red : Colors.white,
                   alignment: Alignment.topCenter,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -420,6 +430,9 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                                                       selectedIncrement = 0;
                                                     });
                                                   }
+                                                  countdownTimer?.cancel();
+                                                  isFinished = false;
+                                                  isRestart = true;
                                                   move = 0;
                                                   currentPlayer = 0;
                                                   Navigator.of(context).pop();
@@ -475,6 +488,9 @@ class _ChessGameScreen extends State<ChessGameScreen> {
             flex: 4,
             child: GestureDetector(
               onTap: () {
+                if (isFinished) {
+                  return;
+                }
                 if (currentPlayer == 1) {
                   return;
                 }
@@ -487,14 +503,16 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                 });
                 countdownTimer?.cancel();
 
-                startCountdownTimer(remainingTimePlayer2, 2);
+                startCountdownTimer(remainingTimePlayer1, 2);
                 if (move != 0) {
                   _incrementPlayer2();
                 }
                 move++;
               },
               child: Container(
-                color: Colors.grey.shade900,
+                color: remainingTimePlayer2 == 0
+                    ? Colors.red
+                    : Colors.grey.shade900,
                 alignment: Alignment.topCenter,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -520,5 +538,11 @@ class _ChessGameScreen extends State<ChessGameScreen> {
     final player = AudioPlayer();
     await player.setSourceAsset("sounds/dong.wav");
     player.play(AssetSource("sounds/dong.wav"));
+  }
+
+  Future<void> playCountSound() async {
+    final player = AudioPlayer();
+    await player.setSourceAsset("sounds/count.wav");
+    player.play(AssetSource("sounds/count.wav"));
   }
 }
