@@ -7,8 +7,8 @@ import '../classes/gametime.dart';
 
 // ignore: must_be_immutable
 class ChessGameScreen extends StatefulWidget {
-  GameTime deneme;
-  ChessGameScreen(this.deneme, {super.key});
+  GameTime gameTime;
+  ChessGameScreen(this.gameTime, {super.key});
   @override
   State<ChessGameScreen> createState() => _ChessGameScreen();
 }
@@ -34,10 +34,10 @@ class _ChessGameScreen extends State<ChessGameScreen> {
   @override
   void initState() {
     super.initState();
-    remainingTimePlayer1 = widget.deneme.time;
-    remainingTimePlayer2 = widget.deneme.time;
-    player1Controller?.text = (widget.deneme.player1);
-    player2Controller?.text = (widget.deneme.player2);
+    remainingTimePlayer1 = widget.gameTime.time;
+    remainingTimePlayer2 = widget.gameTime.time;
+    player1Controller?.text = (widget.gameTime.player1);
+    player2Controller?.text = (widget.gameTime.player2);
   }
 
   _restart() {
@@ -63,16 +63,16 @@ class _ChessGameScreen extends State<ChessGameScreen> {
 
   _incrementPlayer1Score() {
     setState(() {
-      widget.deneme.scorePlayer1++;
+      widget.gameTime.scorePlayer1++;
     });
   }
 
   _decrementPlayer1Score() {
     setState(() {
-      if (widget.deneme.scorePlayer1 <= 0) {
+      if (widget.gameTime.scorePlayer1 <= 0) {
         return;
       }
-      widget.deneme.scorePlayer1--;
+      widget.gameTime.scorePlayer1--;
     });
   }
 
@@ -84,16 +84,16 @@ class _ChessGameScreen extends State<ChessGameScreen> {
 
   _incrementPlayer2Score() {
     setState(() {
-      widget.deneme.scorePlayer2++;
+      widget.gameTime.scorePlayer2++;
     });
   }
 
   _decrementPlayer2Score() {
     setState(() {
-      if (widget.deneme.scorePlayer2 <= 0) {
+      if (widget.gameTime.scorePlayer2 <= 0) {
         return;
       }
-      widget.deneme.scorePlayer2--;
+      widget.gameTime.scorePlayer2--;
     });
   }
 
@@ -120,11 +120,13 @@ class _ChessGameScreen extends State<ChessGameScreen> {
           if (remainingTimePlayer1 == 0) {
             isFinished = true;
             // Player 2 kazandı
-            showWinnerDialog(widget.deneme.player2, widget.deneme.scorePlayer2);
+            showWinnerDialog(
+                widget.gameTime.player2, widget.gameTime.scorePlayer2);
           } else if (remainingTimePlayer2 == 0) {
             isFinished = true;
             // Player 1 kazandı
-            showWinnerDialog(widget.deneme.player1, widget.deneme.scorePlayer1);
+            showWinnerDialog(
+                widget.gameTime.player1, widget.gameTime.scorePlayer1);
           }
         }
       });
@@ -145,13 +147,13 @@ class _ChessGameScreen extends State<ChessGameScreen> {
               onPressed: () {
                 // Skorunuzu artırabilirsiniz.
                 // Örneğin, kazananın skorunu 1 artırmak için:
-                if (winner == widget.deneme.player1) {
+                if (winner == widget.gameTime.player1) {
                   setState(() {
-                    widget.deneme.scorePlayer1++;
+                    widget.gameTime.scorePlayer1++;
                   });
-                } else if (winner == widget.deneme.player2) {
+                } else if (winner == widget.gameTime.player2) {
                   setState(() {
-                    widget.deneme.scorePlayer2++;
+                    widget.gameTime.scorePlayer2++;
                   });
                 }
                 Navigator.of(context).pop();
@@ -232,7 +234,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(widget.deneme.player1),
+                    Text(widget.gameTime.player1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -241,7 +243,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                           onPressed: () => _incrementPlayer1Score(),
                         ),
                         Text(
-                          "${widget.deneme.scorePlayer1}",
+                          "${widget.gameTime.scorePlayer1}",
                           style: const TextStyle(fontSize: 32),
                         ),
                         HoverIconButton(
@@ -320,12 +322,12 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                                               hintText: 'Player 1 Name',
                                             ),
                                             autofillHints: [
-                                              widget.deneme.player1
+                                              widget.gameTime.player1
                                             ],
                                             keyboardType: TextInputType.text,
                                             onChanged: (value) {
                                               setState(() {
-                                                widget.deneme.player1 = value;
+                                                widget.gameTime.player1 = value;
                                               });
                                             },
                                           ),
@@ -339,7 +341,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                                             keyboardType: TextInputType.text,
                                             onChanged: (value) {
                                               setState(() {
-                                                widget.deneme.player2 = value;
+                                                widget.gameTime.player2 = value;
                                               });
                                             },
                                           ),
@@ -460,7 +462,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(widget.deneme.player2),
+                  Text(widget.gameTime.player2),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -469,7 +471,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                         onPressed: () => _incrementPlayer2Score(),
                       ),
                       Text(
-                        "${widget.deneme.scorePlayer2}",
+                        "${widget.gameTime.scorePlayer2}",
                         style: const TextStyle(fontSize: 32),
                       ),
                       HoverIconButton(
