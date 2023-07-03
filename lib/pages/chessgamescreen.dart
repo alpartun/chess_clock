@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:chess_clock/widgets/hovericonbutton.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../classes/gametime.dart';
 
@@ -46,8 +47,8 @@ class _ChessGameScreen extends State<ChessGameScreen> {
     selectedIncrement = 0;
 
     setState(() {
-      remainingTimePlayer1 = 10 * 60;
-      remainingTimePlayer2 = 10 * 60;
+      remainingTimePlayer1 = 10;
+      remainingTimePlayer2 = 10;
       currentPlayer = 0;
       isRestart = true;
       move = 0;
@@ -112,10 +113,49 @@ class _ChessGameScreen extends State<ChessGameScreen> {
           }
         } else {
           timer.cancel();
-          // Geri sayım tamamlandığında yapılacak işlemleri buraya yazabilirsiniz
+          // Süre bittiğinde yapılacak işlemleri buraya yazın// Zil sesini çal
+          if (remainingTimePlayer1 == 0) {
+            // Player 2 kazandı
+            showWinnerDialog(widget.deneme.player2, widget.deneme.scorePlayer2);
+          } else if (remainingTimePlayer2 == 0) {
+            // Player 1 kazandı
+            showWinnerDialog(widget.deneme.player1, widget.deneme.scorePlayer1);
+          }
         }
       });
     });
+  }
+
+  void showWinnerDialog(String winner, int score) {
+    playBellSound();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Winner'),
+          content: Text('Congrats !, $winner won the game!'),
+          actions: [
+            TextButton(
+              child: const Text('Okey'),
+              onPressed: () {
+                // Skorunuzu artırabilirsiniz.
+                // Örneğin, kazananın skorunu 1 artırmak için:
+                if (winner == widget.deneme.player1) {
+                  setState(() {
+                    widget.deneme.scorePlayer1++;
+                  });
+                } else if (winner == widget.deneme.player2) {
+                  setState(() {
+                    widget.deneme.scorePlayer2++;
+                  });
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   String formatTime(int timeFormat) {
@@ -194,7 +234,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                         ),
                         Text(
                           "${widget.deneme.scorePlayer1}",
-                          style: TextStyle(fontSize: 48),
+                          style: const TextStyle(fontSize: 48),
                         ),
                         HoverIconButton(
                           icon: (Icons.remove_circle_outline_rounded),
@@ -226,172 +266,174 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                       children: [
                         HoverIconButton(
                           icon: (Icons.arrow_back),
-                          onPressed: () => Navigator.pop(context) /* TODO */,
+                          onPressed: () => Navigator.pop(context),
                         ),
                         HoverIconButton(
                           icon: Icons.restart_alt,
-                          onPressed: () => _restart() /* TODO */,
+                          onPressed: () => _restart(),
                         ),
                         HoverIconButton(
-                          icon: (Icons.settings),
-                          onPressed: () {
-                            isDropMinOptionSelected = false;
-                            isDropIncOptionSelected = false;
+                            icon: (Icons.settings),
+                            onPressed: () {
+                              isDropMinOptionSelected = false;
+                              isDropIncOptionSelected = false;
 
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  elevation: 0.0,
-                                  backgroundColor: Colors.transparent,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(16.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Text(
-                                          'Settings',
-                                          style: TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
+                                    elevation: 0.0,
+                                    backgroundColor: Colors.transparent,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text(
+                                            'Settings',
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 16.0),
-                                        TextField(
-                                          controller: player1Controller,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Player 1',
-                                            hintText: 'Player 1 Name',
+                                          const SizedBox(height: 16.0),
+                                          TextField(
+                                            controller: player1Controller,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Player 1',
+                                              hintText: 'Player 1 Name',
+                                            ),
+                                            autofillHints: [
+                                              widget.deneme.player1
+                                            ],
+                                            keyboardType: TextInputType.text,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                widget.deneme.player1 = value;
+                                              });
+                                            },
                                           ),
-                                          autofillHints: [
-                                            widget.deneme.player1
-                                          ],
-                                          keyboardType: TextInputType.text,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              widget.deneme.player1 = value;
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(height: 8.0),
-                                        TextField(
-                                          controller: player2Controller,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Player 2',
-                                            hintText: 'Player 2 Name',
+                                          const SizedBox(height: 8.0),
+                                          TextField(
+                                            controller: player2Controller,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Player 2',
+                                              hintText: 'Player 2 Name',
+                                            ),
+                                            keyboardType: TextInputType.text,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                widget.deneme.player2 = value;
+                                              });
+                                            },
                                           ),
-                                          keyboardType: TextInputType.text,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              widget.deneme.player2 = value;
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(height: 8.0),
-                                        DropdownButtonFormField<int>(
-                                          value: selectedTime,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Time (Min)',
-                                          ),
-                                          items: timeOptions.map((int value) {
-                                            return DropdownMenuItem<int>(
-                                              value: value,
-                                              child: Text('$value'),
-                                            );
-                                          }).toList(),
-                                          onChanged: (int? newValue) {
-                                            setState(() {
-                                              isDropMinOptionSelected = true;
-                                              if (newValue != null) {
-                                                countdownTimer?.cancel();
-                                                selectedTime = newValue;
-                                                remainingTimePlayer1 = 0;
-                                                remainingTimePlayer2 = 0;
-                                                remainingTimePlayer1 =
-                                                    selectedTime * 60;
-                                                remainingTimePlayer2 =
-                                                    selectedTime * 60;
-                                              } else {
-                                                countdownTimer?.cancel();
-                                                remainingTimePlayer1 = 0;
-                                                remainingTimePlayer2 = 0;
-                                                remainingTimePlayer1 = 10 * 60;
-                                                remainingTimePlayer2 = 10 * 60;
-                                              }
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(height: 8.0),
-                                        DropdownButtonFormField<int>(
-                                          value: selectedIncrement,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Add Seconds',
-                                          ),
-                                          items:
-                                              incrementOptions.map((int value) {
-                                            return DropdownMenuItem<int>(
-                                              value: value,
-                                              child: Text('$value'),
-                                            );
-                                          }).toList(),
-                                          onChanged: (int? newValue) {
-                                            setState(() {
-                                              isDropIncOptionSelected = true;
-                                              selectedIncrement = newValue!;
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(height: 16.0),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            TextButton(
-                                              child: const Text(
-                                                'Start',
-                                                style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 18.0,
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                if (!isDropMinOptionSelected) {
-                                                  setState(() {});
+                                          const SizedBox(height: 8.0),
+                                          DropdownButtonFormField<int>(
+                                            value: selectedTime,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Time (Min)',
+                                            ),
+                                            items: timeOptions.map((int value) {
+                                              return DropdownMenuItem<int>(
+                                                value: value,
+                                                child: Text('$value'),
+                                              );
+                                            }).toList(),
+                                            onChanged: (int? newValue) {
+                                              setState(() {
+                                                isDropMinOptionSelected = true;
+                                                if (newValue != null) {
                                                   countdownTimer?.cancel();
+                                                  selectedTime = newValue;
                                                   remainingTimePlayer1 = 0;
                                                   remainingTimePlayer2 = 0;
                                                   remainingTimePlayer1 =
                                                       selectedTime * 60;
                                                   remainingTimePlayer2 =
                                                       selectedTime * 60;
+                                                } else {
+                                                  countdownTimer?.cancel();
+                                                  remainingTimePlayer1 = 0;
+                                                  remainingTimePlayer2 = 0;
+                                                  remainingTimePlayer1 =
+                                                      10 * 60;
+                                                  remainingTimePlayer2 =
+                                                      10 * 60;
                                                 }
-                                                if (!isDropIncOptionSelected) {
-                                                  setState(() {
-                                                    selectedIncrement = 0;
-                                                  });
-                                                }
-                                                move = 0;
-                                                currentPlayer = 0;
-                                                Navigator.of(context).pop();
-                                              },
+                                              });
+                                            },
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          DropdownButtonFormField<int>(
+                                            value: selectedIncrement,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Add Seconds',
                                             ),
-                                          ],
-                                        ),
-                                      ],
+                                            items: incrementOptions
+                                                .map((int value) {
+                                              return DropdownMenuItem<int>(
+                                                value: value,
+                                                child: Text('$value'),
+                                              );
+                                            }).toList(),
+                                            onChanged: (int? newValue) {
+                                              setState(() {
+                                                isDropIncOptionSelected = true;
+                                                selectedIncrement = newValue!;
+                                              });
+                                            },
+                                          ),
+                                          const SizedBox(height: 16.0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              TextButton(
+                                                child: const Text(
+                                                  'Start',
+                                                  style: TextStyle(
+                                                    color: Colors.blue,
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  if (!isDropMinOptionSelected) {
+                                                    setState(() {});
+                                                    countdownTimer?.cancel();
+                                                    remainingTimePlayer1 = 0;
+                                                    remainingTimePlayer2 = 0;
+                                                    remainingTimePlayer1 =
+                                                        selectedTime * 60;
+                                                    remainingTimePlayer2 =
+                                                        selectedTime * 60;
+                                                  }
+                                                  if (!isDropIncOptionSelected) {
+                                                    setState(() {
+                                                      selectedIncrement = 0;
+                                                    });
+                                                  }
+                                                  move = 0;
+                                                  currentPlayer = 0;
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            );
-                          }
-                        ),
+                                  );
+                                },
+                              );
+                            }),
                       ],
                     )
                   ],
@@ -472,5 +514,11 @@ class _ChessGameScreen extends State<ChessGameScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> playBellSound() async {
+    final player = AudioPlayer();
+    await player.setSourceAsset("sounds/dong.wav");
+    player.play(AssetSource("sounds/dong.wav"));
   }
 }
