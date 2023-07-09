@@ -10,7 +10,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   static const String img = "assets/images/chess_board.jpg";
-  static const String title = "Simple Chess Clock";
+  static const String title = "Chrono Chess ";
   static const double fontSize = 26;
   static const String buttonTitle = "Let's Start";
   GameTime? gameTime;
