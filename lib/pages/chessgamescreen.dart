@@ -293,12 +293,12 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                                 builder: (BuildContext context) {
                                   return Dialog(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     elevation: 0.0,
                                     backgroundColor: Colors.transparent,
                                     child: Container(
-                                      padding: const EdgeInsets.all(16.0),
+                                      padding: const EdgeInsets.all(8.0),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius:
@@ -310,11 +310,11 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                                           const Text(
                                             'Settings',
                                             style: TextStyle(
-                                              fontSize: 20.0,
+                                              fontSize: 16.0,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          const SizedBox(height: 16.0),
+                                          const SizedBox(height: 12.0),
                                           TextField(
                                             controller: player1Controller,
                                             decoration: const InputDecoration(
@@ -401,7 +401,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                                               });
                                             },
                                           ),
-                                          const SizedBox(height: 16.0),
+                                          const SizedBox(height: 8.0),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
@@ -411,7 +411,7 @@ class _ChessGameScreen extends State<ChessGameScreen> {
                                                   'Start',
                                                   style: TextStyle(
                                                     color: Colors.blue,
-                                                    fontSize: 18.0,
+                                                    fontSize: 12.0,
                                                   ),
                                                 ),
                                                 onPressed: () {
